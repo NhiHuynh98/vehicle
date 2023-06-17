@@ -22,12 +22,12 @@ model = keras.Sequential([
     layers.MaxPooling2D((2, 2)),
     layers.Flatten(),
     layers.Dense(64, activation="relu"),
-    layers.Dense(2, activation="softmax")
+    layers.Dense(10, activation="softmax")  # Updated num_classes
 ])
 
 # Compile the model
 model.compile(optimizer="adam",
-              loss="categorical_crossentropy",
+              loss="sparse_categorical_crossentropy",  # Updated loss function
               metrics=["accuracy"])
 
 # Train the model
@@ -35,8 +35,7 @@ model.fit(x_train, y_train, batch_size=64, epochs=10, validation_split=0.2)
 
 # Evaluate the model on the test set
 x_test = x_test.astype("float32") / 255.0
-y_test = keras.utils.to_categorical(y_test, num_classes=2)
-
+y_test = y_test.flatten()
 test_loss, test_acc = model.evaluate(x_test, y_test)
 print("Test loss:", test_loss)
 print("Test accuracy:", test_acc)
