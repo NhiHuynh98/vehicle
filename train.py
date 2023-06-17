@@ -58,7 +58,7 @@ model.compile(optimizer=optimizer,
 
 # Train the model
 model.fit(x_train, y_train, batch_size=64,
-          epochs=10, validation_data=(x_val, y_val))
+          epochs=200, validation_data=(x_val, y_val))
 
 # Evaluate the model on the test set
 test_loss, test_acc = model.evaluate(x_test, y_test)
