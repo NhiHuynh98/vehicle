@@ -58,9 +58,12 @@ model.compile(optimizer=optimizer,
 
 # Train the model
 model.fit(x_train, y_train, batch_size=64,
-          epochs=200, validation_data=(x_val, y_val))
+          epochs=250, validation_data=(x_val, y_val))
 
 # Evaluate the model on the test set
 test_loss, test_acc = model.evaluate(x_test, y_test)
 print("Test loss:", test_loss)
 print("Test accuracy:", test_acc)
+
+
+# scp -P 10023 /Users/baby/Desktop/vehicle-brand-classification/train.py nhihtt@103.130.211.150:/home/nhihtt/data/vehicle
