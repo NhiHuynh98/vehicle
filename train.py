@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.optimizers import AdamW
+from adamw import AdamW
 
 # Load the CIFAR-10 dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
