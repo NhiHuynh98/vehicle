@@ -7,6 +7,11 @@ from tensorflow.keras.optimizers.legacy import Adam
 from cnnmodel.smallervggnet import SmallerVGGNet
 from keras.utils import to_categorical
 import numpy as np
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
 
 INIT_LR = 1e-4
 BS = 30
@@ -66,6 +71,31 @@ plt.legend()
 loss, accuracy = model.evaluate(x_test, y_test)
 print("Test Loss:", loss)
 print("Test Accuracy:", accuracy)
+
+y_pred = model.predict(x_test)
+cm = confusion_matrix(y_test, y_pred)
+
+sns.heatmap(cm,
+            annot=True,
+            fmt='g',
+            xticklabels=['malignant', 'benign'],
+            yticklabels=['malignant', 'benign'])
+plt.ylabel('Prediction', fontsize=13)
+plt.xlabel('Actual', fontsize=13)
+plt.title('Confusion Matrix', fontsize=17)
+plt.savefig('confusion_matrix.png')
+plt.show()
+
+
+# Finding precision and recall
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy   :", accuracy)
+precision = precision_score(y_test, y_pred)
+print("Precision :", precision)
+recall = recall_score(y_test, y_pred)
+print("Recall    :", recall)
+F1_score = f1_score(y_test, y_pred)
+print("F1-score  :", F1_score)
 
 # Convert labels to one-hot encoding
 # num_classes = 10
