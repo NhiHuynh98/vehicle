@@ -11,38 +11,77 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
-
+import tensorflow_datasets as tfds
 
 INIT_LR = 1e-4
 BS = 30
 EPOCHS = 400
 IMAGE_DIMS = (32, 32, 3)
 
-num_classes = 2
+num_classes = 196
 # Load the CIFAR-10 dataset
-(x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+# (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 
-car_class = 1  # The class index for car in CIFAR-10 dataset
+# car_class = 1  # The class index for car in CIFAR-10 dataset
 
-car_train_indices = np.where(y_train == car_class)[0]
-car_test_indices = np.where(y_test == car_class)[0]
+# car_train_indices = np.where(y_train == car_class)[0]
+# car_test_indices = np.where(y_test == car_class)[0]
 
-x_train = x_train[car_train_indices]
-y_train = y_train[car_train_indices]
+# x_train = x_train[car_train_indices]
+# y_train = y_train[car_train_indices]
 
-x_test = x_test[car_test_indices]
-y_test = y_test[car_test_indices]
+# x_test = x_test[car_test_indices]
+# y_test = y_test[car_test_indices]
 
-# Reduce pixel values
+# # Reduce pixel values
 
-# Reduce pixel values
-x_train, x_test = x_train / 255.0, x_test / 255.0
+# # Reduce pixel values
+# x_train, x_test = x_train / 255.0, x_test / 255.0
 
-# flatten the label values
-y_train, y_test = y_train.flatten(), y_test.flatten()
+# # flatten the label values
+# y_train, y_test = y_train.flatten(), y_test.flatten()
 
-print(x_train, x_test)
-print(y_train, y_test)
+# print(x_train, x_test)
+# print(y_train, y_test)
+
+
+# Load the Cars196 dataset
+dataset, info = tfds.load(
+    'cars196', split=['train', 'test'], shuffle_files=True, with_info=True)
+
+# Extract the training and testing sets
+train_dataset, test_dataset = dataset['train'], dataset['test']
+
+# Prepare the training set
+x_train = []
+y_train = []
+for example in tfds.as_dataframe(train_dataset, info):
+    x_train.append(example['image'])
+    y_train.append(example['label'])
+
+# Prepare the testing set
+x_test = []
+y_test = []
+for example in tfds.as_dataframe(test_dataset, info):
+    x_test.append(example['image'])
+    y_test.append(example['label'])
+
+# Convert the lists to NumPy arrays
+x_train = np.array(x_train)
+y_train = np.array(y_train)
+x_test = np.array(x_test)
+y_test = np.array(y_test)
+
+# Normalize pixel values
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# Print the shape of the loaded datasets
+print("x_train shape:", x_train.shape)
+print("y_train shape:", y_train.shape)
+print("x_test shape:", x_test.shape)
+print("y_test shape:", y_test.shape)
+
 
 model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
                             depth=IMAGE_DIMS[2], classes=num_classes)
