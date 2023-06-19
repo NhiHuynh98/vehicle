@@ -13,7 +13,7 @@ BS = 30
 EPOCHS = 400
 IMAGE_DIMS = (32, 32, 3)
 
-num_classes = 10
+num_classes = 2
 # Load the CIFAR-10 dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
 
