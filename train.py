@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
-from adamw import AdamW
+from tensorflow.keras.optimizers.legacy import Adam
 from cnnmodel.smallervggnet import SmallerVGGNet
 from keras.utils import to_categorical
 
@@ -55,7 +55,7 @@ model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
                             depth=IMAGE_DIMS[2], classes=num_classes)
 
 # Compile the model with AdamW optimizer
-optimizer = AdamW(learning_rate=INIT_LR, weight_decay=0.0001)
+optimizer = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
 model.compile(optimizer=optimizer,
               loss="categorical_crossentropy",
               metrics=["accuracy"])
