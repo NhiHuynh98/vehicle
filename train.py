@@ -29,12 +29,12 @@ x_test = x_test[car_test_indices]
 y_test = y_test[car_test_indices]
 
 # Reduce pixel values
-x_train = x_train / 255.0,
-x_test = x_test / 255.0
+
+# Reduce pixel values
+x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # flatten the label values
-y_train = y_train.flatten(),
-y_test = y_test.flatten()
+y_train, y_test = y_train.flatten(), y_test.flatten()
 
 print(x_train, x_test)
 print(y_train, y_test)
