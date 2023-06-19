@@ -6,16 +6,7 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.optimizers.legacy import Adam
 from cnnmodel.smallervggnet import SmallerVGGNet
 from keras.utils import to_categorical
-from keras.models import Sequential
-from tensorflow.keras.layers import BatchNormalization
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
-from keras.layers.core import Activation
-from keras.layers.core import Flatten
-from keras.layers.core import Dropout
-from keras.layers.core import Dense
-from keras import backend as K
-from tensorflow.keras.models import Model
+import numpy as np
 
 INIT_LR = 1e-4
 BS = 30
@@ -25,6 +16,17 @@ IMAGE_DIMS = (32, 32, 3)
 num_classes = 10
 # Load the CIFAR-10 dataset
 (x_train, y_train), (x_test, y_test) = keras.datasets.cifar10.load_data()
+
+car_class = 1  # The class index for car in CIFAR-10 dataset
+
+car_train_indices = np.where(y_train == car_class)[0]
+car_test_indices = np.where(y_test == car_class)[0]
+
+x_train = x_train[car_train_indices]
+y_train = y_train[car_train_indices]
+
+x_test = x_test[car_test_indices]
+y_test = y_test[car_test_indices]
 
 # Reduce pixel values
 x_train, x_test = x_train / 255.0, x_test / 255.0
