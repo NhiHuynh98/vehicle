@@ -61,7 +61,7 @@ train_generator = data_generator.flow(x_train, y_train, batch_size)
 steps_per_epoch = x_train.shape[0] // batch_size
 
 r = model.fit(train_generator, validation_data=(x_test, y_test),
-              steps_per_epoch=steps_per_epoch, epochs=50)
+              steps_per_epoch=steps_per_epoch, epochs=2)
 
 
 plt.plot(r.history['accuracy'], label='acc', color='red')
