@@ -1,3 +1,4 @@
+from tkinter.tix import InputOnly
 from matplotlib import pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
@@ -6,6 +7,16 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.optimizers.legacy import Adam
 from cnnmodel.smallervggnet import SmallerVGGNet
 from keras.utils import to_categorical
+from keras.models import Sequential
+from tensorflow.keras.layers import BatchNormalization
+from keras.layers.convolutional import Conv2D
+from keras.layers.convolutional import MaxPooling2D
+from keras.layers.core import Activation
+from keras.layers.core import Flatten
+from keras.layers.core import Dropout
+from keras.layers.core import Dense
+from keras import backend as K
+from tensorflow.keras.models import Model
 
 INIT_LR = 1e-4
 BS = 30
@@ -22,15 +33,43 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 # flatten the label values
 y_train, y_test = y_train.flatten(), y_test.flatten()
 
-fig, ax = plt.subplots(5, 5)
-k = 0
+K = len(set(y_train))
 
-for i in range(5):
-    for j in range(5):
-        ax[i][j].imshow(x_train[k], aspect='auto')
-        k += 1
+print("number of classes:", K)
 
-plt.show()
+i = InputOnly(shape=x_train[0].shape)
+x = Conv2D(32, (3, 3), activation='relu', padding='same')(i)
+x = BatchNormalization()(x)
+x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
+x = BatchNormalization()(x)
+x = MaxPooling2D((2, 2))(x)
+
+x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+x = BatchNormalization()(x)
+x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
+x = BatchNormalization()(x)
+x = MaxPooling2D((2, 2))(x)
+
+x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+x = BatchNormalization()(x)
+x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
+x = BatchNormalization()(x)
+x = MaxPooling2D((2, 2))(x)
+
+x = Flatten()(x)
+x = Dropout(0.2)(x)
+
+# Hidden layer
+x = Dense(1024, activation='relu')(x)
+x = Dropout(0.2)(x)
+
+# last hidden layer i.e.. output layer
+x = Dense(K, activation='softmax')(x)
+
+model = Model(i, x)
+
+# model description
+model.summary()
 
 # Convert labels to one-hot encoding
 # num_classes = 10
