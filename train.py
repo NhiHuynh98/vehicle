@@ -39,7 +39,7 @@ K = len(set(y_train))
 print("number of classes:", K)
 
 model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
-                            depth=IMAGE_DIMS[2], classes=K)
+                            depth=IMAGE_DIMS[2], classes=num_classes)
 
 model.summary()
 
@@ -62,8 +62,9 @@ plt.plot(r.history['accuracy'], label='acc', color='red')
 plt.plot(r.history['val_accuracy'], label='val_acc', color='green')
 plt.legend()
 
-scores = model.evaluate(x_test, to_categorical(y_test, num_classes), verbose=0)
-print("Accuracy: %.2f%%" % (scores[1] * 100))
+loss, accuracy = model.evaluate(x_test, y_test)
+print("Test Loss:", loss)
+print("Test Accuracy:", accuracy)
 
 # Convert labels to one-hot encoding
 # num_classes = 10
