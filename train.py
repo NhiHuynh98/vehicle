@@ -1,4 +1,3 @@
-from tkinter.tix import InputOnly
 from matplotlib import pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
@@ -41,6 +40,28 @@ model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
                             depth=IMAGE_DIMS[2], classes=K)
 
 model.summary()
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+batch_size = 32
+data_generator = tf.keras.preprocessing.image.ImageDataGenerator(
+    width_shift_range=0.1, height_shift_range=0.1, horizontal_flip=True)
+
+train_generator = data_generator.flow(x_train, y_train, batch_size)
+steps_per_epoch = x_train.shape[0] // batch_size
+
+r = model.fit(train_generator, validation_data=(x_test, y_test),
+              steps_per_epoch=steps_per_epoch, epochs=50)
+
+
+plt.plot(r.history['accuracy'], label='acc', color='red')
+plt.plot(r.history['val_accuracy'], label='val_acc', color='green')
+plt.legend()
+
+scores = model.evaluate(x_test, to_categorical(y_test, num_classes), verbose=0)
+print("Accuracy: %.2f%%" % (scores[1] * 100))
 
 # Convert labels to one-hot encoding
 # num_classes = 10
