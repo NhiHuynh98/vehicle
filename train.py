@@ -36,9 +36,8 @@ x_test = x_test / 255.0
 y_train = y_train.flatten(),
 y_test = y_test.flatten()
 
-K = len(set(y_train))
-
-print("number of classes:", K)
+print(x_train, x_test)
+print(y_train, y_test)
 
 model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
                             depth=IMAGE_DIMS[2], classes=num_classes)
