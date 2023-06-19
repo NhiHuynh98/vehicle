@@ -73,7 +73,18 @@ print("Test Loss:", loss)
 print("Test Accuracy:", accuracy)
 
 y_pred = model.predict(x_test)
-cm = confusion_matrix(y_test, y_pred)
+
+threshold = 0.5  # Adjust the threshold according to your needs
+
+# Convert y_test to binary labels
+y_test_binary = np.where(y_test >= threshold, 1, 0)
+
+# Convert y_pred to binary labels
+y_pred_binary = np.where(y_pred >= threshold, 1, 0)
+
+# Compute the confusion matrix
+cm = confusion_matrix(y_test_binary, y_pred_binary)
+
 
 sns.heatmap(cm,
             annot=True,
