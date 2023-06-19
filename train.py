@@ -37,38 +37,9 @@ K = len(set(y_train))
 
 print("number of classes:", K)
 
-i = InputOnly(shape=x_train[0].shape)
-x = Conv2D(32, (3, 3), activation='relu', padding='same')(i)
-x = BatchNormalization()(x)
-x = Conv2D(32, (3, 3), activation='relu', padding='same')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2, 2))(x)
+model = SmallerVGGNet.build(width=IMAGE_DIMS[1], height=IMAGE_DIMS[0],
+                            depth=IMAGE_DIMS[2], classes=K)
 
-x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-x = BatchNormalization()(x)
-x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2, 2))(x)
-
-x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
-x = BatchNormalization()(x)
-x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
-x = BatchNormalization()(x)
-x = MaxPooling2D((2, 2))(x)
-
-x = Flatten()(x)
-x = Dropout(0.2)(x)
-
-# Hidden layer
-x = Dense(1024, activation='relu')(x)
-x = Dropout(0.2)(x)
-
-# last hidden layer i.e.. output layer
-x = Dense(K, activation='softmax')(x)
-
-model = Model(i, x)
-
-# model description
 model.summary()
 
 # Convert labels to one-hot encoding
