@@ -9,7 +9,7 @@ from keras.utils import to_categorical
 INIT_LR = 1e-4
 BS = 30
 EPOCHS = 400
-IMAGE_DIMS = (224, 224, 3)
+IMAGE_DIMS = (32, 32, 3)
 
 num_classes = 10
 # Load the CIFAR-10 dataset
