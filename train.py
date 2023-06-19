@@ -72,41 +72,68 @@ loss, accuracy = model.evaluate(x_test, y_test)
 print("Test Loss:", loss)
 print("Test Accuracy:", accuracy)
 
-y_pred = model.predict(x_test)
 
-threshold = 0.5  # Adjust the threshold according to your needs
+image_number = 0
 
-# Convert y_test to binary labels
-y_test_binary = np.where(y_test >= threshold, 1, 0)
+# load the image in an array
+n = np.array(x_test[image_number])
 
-# Convert y_pred to binary labels
-y_pred_binary = np.where(y_pred >= threshold, 1, 0)
+# reshape it
+p = n.reshape(1, 32, 32, 3)
+
+# pass in the network for prediction and
+# save the predicted label
+
+label_names = ['Non-car', 'Car']
+
+car_labels = np.array([label_names[int(label)] for label in y_train])
+
+print(car_labels)
+
+predicted_label = car_labels[model.predict(p).argmax()]
+
+# load the original label
+original_label = car_labels[y_test[image_number]]
+
+# display the result
+print("Original label is {} and predicted label is {}".format(
+    original_label, predicted_label))
+
+
+# y_pred = model.predict(x_test)
+
+# threshold = 0.5  # Adjust the threshold according to your needs
+
+# # Convert y_test to binary labels
+# y_test_binary = np.where(y_test >= threshold, 1, 0)
+
+# # Convert y_pred to binary labels
+# y_pred_binary = np.where(y_pred >= threshold, 1, 0)
 
 # Compute the confusion matrix
-cm = confusion_matrix(y_test_binary, y_pred_binary)
+# cm = confusion_matrix(y_test_binary, y_pred_binary)
+
+# sns.heatmap(cm,
+#             annot=True,
+#             fmt='g',
+#             xticklabels=['malignant', 'benign'],
+#             yticklabels=['malignant', 'benign'])
+# plt.ylabel('Prediction', fontsize=13)
+# plt.xlabel('Actual', fontsize=13)
+# plt.title('Confusion Matrix', fontsize=17)
+# plt.savefig('confusion_matrix.png')
+# plt.show()
 
 
-sns.heatmap(cm,
-            annot=True,
-            fmt='g',
-            xticklabels=['malignant', 'benign'],
-            yticklabels=['malignant', 'benign'])
-plt.ylabel('Prediction', fontsize=13)
-plt.xlabel('Actual', fontsize=13)
-plt.title('Confusion Matrix', fontsize=17)
-plt.savefig('confusion_matrix.png')
-plt.show()
-
-
-# Finding precision and recall
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy   :", accuracy)
-precision = precision_score(y_test, y_pred)
-print("Precision :", precision)
-recall = recall_score(y_test, y_pred)
-print("Recall    :", recall)
-F1_score = f1_score(y_test, y_pred)
-print("F1-score  :", F1_score)
+# # Finding precision and recall
+# accuracy = accuracy_score(y_test, y_pred)
+# print("Accuracy   :", accuracy)
+# precision = precision_score(y_test, y_pred)
+# print("Precision :", precision)
+# recall = recall_score(y_test, y_pred)
+# print("Recall    :", recall)
+# F1_score = f1_score(y_test, y_pred)
+# print("F1-score  :", F1_score)
 
 # Convert labels to one-hot encoding
 # num_classes = 10
