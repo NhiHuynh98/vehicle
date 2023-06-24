@@ -1,3 +1,4 @@
+import os
 from tensorflow.keras.models import Sequential
 # action detectionimport tensorflow
 from tensorflow.keras.layers import Dense, Dropout, Convolution2D, MaxPooling2D, Flatten
@@ -7,22 +8,24 @@ from IPython.display import HTML
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 IMAGE_SIZE = 128
 
-train_datagen = ImageDataGenerator(
-    rescale=1./255,
-    rotation_range=10,
-    horizontal_flip=True
-)
-train_generator = train_datagen.flow_from_directory(
-    '/kaggle/input/cars-image-dataset/Cars Dataset/train',
-    target_size=(IMAGE_SIZE, IMAGE_SIZE),
-    class_mode="sparse",
-)
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    print(os.path.join(dirname))
+# train_datagen = ImageDataGenerator(
+#     rescale=1./255,
+#     rotation_range=10,
+#     horizontal_flip=True
+# )
+# train_generator = train_datagen.flow_from_directory(
+#     '/kaggle/input/cars-image-dataset/Cars Dataset/train',
+#     target_size=(IMAGE_SIZE, IMAGE_SIZE),
+#     class_mode="sparse",
+# )
 
-count = 0
-for image_batch, label_batch in train_generator:
-    #     print(label_batch)
-    print(image_batch[0])
-    break
+# count = 0
+# for image_batch, label_batch in train_generator:
+#     #     print(label_batch)
+#     print(image_batch[0])
+#     break
 
-class_names = list(train_generator.class_indices.keys())
-print(class_names)
+# class_names = list(train_generator.class_indices.keys())
+# print(class_names)
