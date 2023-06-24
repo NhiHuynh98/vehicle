@@ -13,7 +13,7 @@ train_datagen = ImageDataGenerator(
     horizontal_flip=True
 )
 train_generator = train_datagen.flow_from_directory(
-    '/car',
+    'Cars Dataset/train',
     target_size=(IMAGE_SIZE, IMAGE_SIZE),
     class_mode="sparse",
 )
@@ -21,7 +21,7 @@ train_generator = train_datagen.flow_from_directory(
 count = 0
 for image_batch, label_batch in train_generator:
     #     print(label_batch)
-    print(image_batch[0])
+    print(image_batch, label_batch)
     break
 
 class_names = list(train_generator.class_indices.keys())
