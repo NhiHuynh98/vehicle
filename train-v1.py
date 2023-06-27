@@ -8,8 +8,11 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
 import argparse
 import numpy as np
+import pickle
 
 IMAGE_SIZE = 128
+
+
 def predict(model, img):
     img_array = tf.keras.preprocessing.image.img_to_array(images[i])
     img_array = tf.expand_dims(img_array, 0)
@@ -20,9 +23,12 @@ def predict(model, img):
     confidence = round(100 * (np.max(predictions[0])), 2)
     return predicted_class, confidence
 
+
 ap = argparse.ArgumentParser()
 ap.add_argument("-m", "--model", required=True,
                 help="path to output model")
+ap.add_argument("-l", "--labelbin", required=True,
+                help="path to output label binarizer")
 args = vars(ap.parse_args())
 
 train_datagen = ImageDataGenerator(
@@ -44,15 +50,22 @@ for image_batch, label_batch in train_generator:
 
 class_names = list(train_generator.class_indices.keys())
 print(class_names)
+
+# save the label binarizer to disk
+print("[INFO] serializing label binarizer...")
+f = open(args["labelbin"], "wb")
+f.write(pickle.dumps(class_names))
+f.close()
+
 test_datagen = ImageDataGenerator(
-        rescale=1./255,
-        rotation_range=10,
-        horizontal_flip=True)
+    rescale=1./255,
+    rotation_range=10,
+    horizontal_flip=True)
 
 test_generator = test_datagen.flow_from_directory(
-        'Cars Dataset/test',
-        target_size=(IMAGE_SIZE,IMAGE_SIZE),
-        class_mode="sparse"
+    'Cars Dataset/test',
+    target_size=(IMAGE_SIZE, IMAGE_SIZE),
+    class_mode="sparse"
 )
 for image_batch, label_batch in test_generator:
     print(image_batch[0])
@@ -75,9 +88,10 @@ EPOCHS = 50
 model.add(Dense(units=96, activation='relu'))
 model.add(Dropout(0.40))
 model.add(Dense(units=32, activation='relu'))
-model.add(Dense(units=7, activation='softmax')) # softmax for more than 2
+model.add(Dense(units=7, activation='softmax'))  # softmax for more than 2
 model.summary()
-model.compile(optimizer='adam',loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),metrics=['accuracy'])
+model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(
+    from_logits=False), metrics=['accuracy'])
 history = model.fit(
     train_generator,
     validation_data=test_generator,
@@ -116,7 +130,8 @@ for images, labels in test_generator:
         predicted_class, confidence = predict(model, images[i])
         actual_class = class_names[int(labels[i])]
 
-        plt.title(f"Actual: {actual_class},\n Predicted: {predicted_class}.\n Confidence: {confidence}%")
+        plt.title(
+            f"Actual: {actual_class},\n Predicted: {predicted_class}.\n Confidence: {confidence}%")
        # plt.savefig(f'{actual_class}.png')
         plt.axis("off")
     break

@@ -20,8 +20,6 @@ import tensorflow as tf
 ap = argparse.ArgumentParser()
 ap.add_argument("-m", "--model", required=True,
                 help="path to trained model model")
-ap.add_argument("-l", "--labelbin", required=True,
-                help="path to label binarizer")
 ap.add_argument("-i", "--image", required=True,
                 help="path to input image")
 args = vars(ap.parse_args())
@@ -33,7 +31,7 @@ image = cv2.imread(args["image"])
 output = image.copy()
 
 # pre-process the image for classification
-image = cv2.resize(image, (120, 90))
+# image = cv2.resize(image, (120, 90))
 # cv2.imshow("Resize", image)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
@@ -54,8 +52,8 @@ lb = pickle.loads(open(args["labelbin"], "rb").read())
 print("[INFO] classifying image...")
 proba = model.predict(image)[0]
 idx = np.argmax(proba)
-label = lb.classes_[idx]
-print("label", lb.classes_, idx, np.argmin(proba), proba)
+label = lb[idx]
+print("label", lb, idx, np.argmin(proba), proba)
 
 # we'll mark our prediction as "correct" of the input image filename
 # contains the predicted label text (obviously this makes the
