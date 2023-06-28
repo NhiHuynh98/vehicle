@@ -85,7 +85,7 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 
 # Flattening the layers
 model.add(Flatten())
-EPOCHS = 1
+EPOCHS = 50
 # Adding a fully connected layer
 model.add(Dense(units=96, activation='relu'))
 model.add(Dropout(0.40))
