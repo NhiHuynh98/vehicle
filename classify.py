@@ -26,14 +26,12 @@ ap.add_argument("-i", "--image", required=True,
                 help="path to input image")
 args = vars(ap.parse_args())
 
-print("test", args["image"])
-print("Model", args["model"])
 # load the image
 image = cv2.imread(args["image"])
 output = image.copy()
 
 # pre-process the image for classification
-image = cv2.resize(image, (120, 90))
+image = cv2.resize(image, (128, 128))
 # cv2.imshow("Resize", image)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
@@ -54,8 +52,7 @@ lb = pickle.loads(open(args["labelbin"], "rb").read())
 print("[INFO] classifying image...")
 proba = model.predict(image)[0]
 idx = np.argmax(proba)
-label = lb.classes_[idx]
-print("label", lb.classes_, idx, np.argmin(proba), proba)
+label = lb[idx]
 
 # we'll mark our prediction as "correct" of the input image filename
 # contains the predicted label text (obviously this makes the
