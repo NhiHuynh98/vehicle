@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 import argparse
 import numpy as np
 import pickle
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 IMAGE_SIZE = 128
 
@@ -99,6 +101,27 @@ history = model.fit(
 )
 model.save(args["model"])
 scores = model.evaluate(test_generator)
+
+# Get the predicted labels
+predictions = model.predict(test_generator)
+predicted_labels = np.argmax(predictions, axis=1)
+
+# Get the true labels
+true_labels = test_generator.labels
+
+print(true_labels)
+print(predicted_labels)
+# Compute the confusion matrix
+confusion_mat = confusion_matrix(true_labels, predicted_labels)
+
+sns.heatmap(confusion_mat,
+            annot=True,
+            fmt='g')
+plt.ylabel('Prediction', fontsize=13)
+plt.xlabel('Actual', fontsize=13)
+plt.title('Confusion Matrix', fontsize=17)
+plt.show()
+
 print(scores)
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
