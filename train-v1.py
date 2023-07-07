@@ -113,6 +113,7 @@ print(true_labels)
 print(predicted_labels)
 # Compute the confusion matrix
 confusion_mat = confusion_matrix(true_labels, predicted_labels)
+print("confusion_mat", confusion_mat)
 
 sns.heatmap(confusion_mat,
             annot=True,
