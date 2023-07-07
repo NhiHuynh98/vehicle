@@ -185,35 +185,11 @@ vgg_pred_classes = np.argmax(vgg_preds, axis=1)
 vgg_acc = accuracy_score(true_classes, vgg_pred_classes)
 print("VGG16 Model Accuracy without Fine-Tuning: {:.2f}%".format(vgg_acc * 100))
 
-
-acc = vgg_ft_history.history['accuracy']
-val_acc = vgg_ft_history.history['val_accuracy']
-
-loss = vgg_ft_history.history['loss']
-val_loss = vgg_ft_history.history['val_loss']
-plt.figure(figsize=(8, 8))
-plt.subplot(1, 2, 1)
-plt.plot(range(n_epochs), acc, label='Training Accuracy')
-plt.plot(range(n_epochs), val_acc, label='Validation Accuracy')
-plt.legend(loc='lower right')
-plt.title('Training and Validation Accuracy')
-plt.savefig('accuracy.png')
-
-plt.subplot(1, 2, 2)
-plt.plot(range(n_epochs), loss, label='Training Loss')
-plt.plot(range(n_epochs), val_loss, label='Validation Loss')
-plt.legend(loc='upper right')
-plt.title('Training and Validation Loss')
-plt.savefig('loss.png')
-plt.show()
-
 #  confussion matrix
 class_names = testgen.class_indices.keys()
 
 
-fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 7))
-print("TEST AX", ax1)
-print("TEST AX", ax2)
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 10))
 plot_heatmap(true_classes, vgg_pred_classes, class_names, ax2, title="Transfer Learning (VGG16)")    
 
 fig.suptitle("Confusion Matrix Model Comparison", fontsize=24)

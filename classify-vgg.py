@@ -5,9 +5,10 @@ from keras.applications.vgg16 import decode_predictions
 from keras.applications.vgg16 import VGG16
 import argparse
 import cv2
+from keras.models import load_model
 
 # load the model
-model = VGG16()
+model = load_model('tl_model_v1.weights.best.hdf5')
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-m", "--image", required=True,
