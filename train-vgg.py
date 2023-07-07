@@ -88,7 +88,6 @@ train_path = 'Cars Dataset/train'
 test_path = 'Cars Dataset/test'
 
 BATCH_SIZE = 32
-epochs = 5
 
 train_generator = ImageDataGenerator(rotation_range=90, 
                                      brightness_range=[0.1, 0.7],
@@ -143,7 +142,7 @@ optim_2 = Adam(lr=0.0001)
 
 n_steps = traingen.samples // BATCH_SIZE
 n_val_steps = validgen.samples // BATCH_SIZE
-n_epochs = 2
+n_epochs = 1
 
 vgg_model_ft = create_model(input_shape, n_classes, optim_2, fine_tune=2)
 
@@ -194,15 +193,15 @@ loss = vgg_ft_history.history['loss']
 val_loss = vgg_ft_history.history['val_loss']
 plt.figure(figsize=(8, 8))
 plt.subplot(1, 2, 1)
-plt.plot(range(epochs), acc, label='Training Accuracy')
-plt.plot(range(epochs), val_acc, label='Validation Accuracy')
+plt.plot(range(n_epochs), acc, label='Training Accuracy')
+plt.plot(range(n_epochs), val_acc, label='Validation Accuracy')
 plt.legend(loc='lower right')
 plt.title('Training and Validation Accuracy')
 plt.savefig('accuracy.png')
 
 plt.subplot(1, 2, 2)
-plt.plot(range(epochs), loss, label='Training Loss')
-plt.plot(range(epochs), val_loss, label='Validation Loss')
+plt.plot(range(n_epochs), loss, label='Training Loss')
+plt.plot(range(n_epochs), val_loss, label='Validation Loss')
 plt.legend(loc='upper right')
 plt.title('Training and Validation Loss')
 plt.savefig('loss.png')
