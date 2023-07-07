@@ -142,7 +142,7 @@ optim_2 = Adam(lr=0.0001)
 
 n_steps = traingen.samples // BATCH_SIZE
 n_val_steps = validgen.samples // BATCH_SIZE
-n_epochs = 1
+n_epochs = 5
 
 vgg_model_ft = create_model(input_shape, n_classes, optim_2, fine_tune=2)
 
