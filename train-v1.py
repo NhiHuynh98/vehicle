@@ -11,6 +11,8 @@ import numpy as np
 import pickle
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
+#from tensorflow.keras.optimizers import AdamW
+import tensorflow_addons as tfa
 
 IMAGE_SIZE = 128
 
@@ -92,8 +94,12 @@ model.add(Dropout(0.40))
 model.add(Dense(units=32, activation='relu'))
 model.add(Dense(units=7, activation='softmax'))  # softmax for more than 2
 model.summary()
-model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(
-    from_logits=False), metrics=['accuracy'])
+lr = 0.001
+optimizer =  tfa.optimizers.AdamW(learning_rate=lr, weight_decay=0.001)
+model.compile(optimizer=optimizer, loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False), metrics=['accuracy'])
+
+#model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(
+#    from_logits=False), metrics=['accuracy'])
 history = model.fit(
     train_generator,
     validation_data=test_generator,
@@ -121,9 +127,9 @@ sns.heatmap(confusion_mat,
 plt.ylabel('Prediction', fontsize=13)
 plt.xlabel('Actual', fontsize=13)
 plt.title('Confusion Matrix', fontsize=17)
-plt.show()
+#plt.show()
+plt.savefig('confussion-matrix.png')
 
-print(scores)
 acc = history.history['accuracy']
 val_acc = history.history['val_accuracy']
 
