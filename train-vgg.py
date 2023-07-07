@@ -87,24 +87,6 @@ IMAGE_SIZE = [224,224]
 train_path = 'Cars Dataset/train'
 test_path = 'Cars Dataset/test'
 
-# # Load pre-trained model
-# vgg = VGG16(input_shape=IMAGE_SIZE+[3], weights='imagenet',include_top=False)
-
-# for layer in vgg.layers:    #layer.trainable=False means we dont want to retrain those weights of layers.
-#     layer.trainable=False
-
-# #  Use glob to the total number of classes (audi, lamborghini and mercedes)
-# folders=glob('Cars Dataset/train/*')
-# print("number of classes", folders)
-
-# x=Flatten()(vgg.output)
-
-# prediction = Dense(len(folders),activation='softmax')(x)
-
-# model = Model(inputs=vgg.input,outputs=prediction)    # create model object
-
-# model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
-
 BATCH_SIZE = 32
 epochs = 5
 
@@ -153,12 +135,20 @@ input_shape = (224, 224, 3)
 optim_1 = Adam(learning_rate=0.001)
 n_classes=10
 
+traingen.reset()
+validgen.reset()
+testgen.reset()
+
+optim_2 = Adam(lr=0.0001)
+
 n_steps = traingen.samples // BATCH_SIZE
 n_val_steps = validgen.samples // BATCH_SIZE
 n_epochs = 2
 
+vgg_model_ft = create_model(input_shape, n_classes, optim_2, fine_tune=2)
+
 # First we'll train the model without Fine-tuning
-vgg_model = create_model(input_shape, n_classes, optim_1, fine_tune=0)
+# vgg_model = create_model(input_shape, n_classes, optim_1, fine_tune=0)
 
 plot_loss_1 = PlotLossesCallback()
 
@@ -174,23 +164,23 @@ early_stop = EarlyStopping(monitor='val_loss',
                            mode='min')
 
 
-vgg_history = vgg_model.fit(traingen,
+vgg_ft_history = vgg_model_ft.fit(traingen,
 	batch_size=BATCH_SIZE,
 	epochs=n_epochs,
 	validation_data=validgen,
-	steps_per_epoch=n_steps,
+	steps_per_epoch=n_steps, 
 	validation_steps=n_val_steps,
 	callbacks=[tl_checkpoint_1, early_stop, plot_loss_1],
 	verbose=1)
 
 # Generate predictions
-vgg_model.load_weights('tl_model_v1.weights.best.hdf5') # initialize the best trained weights
+vgg_model_ft.load_weights('tl_model_v1.weights.best.hdf5') # initialize the best trained weights
 
 true_classes = testgen.classes
 class_indices = traingen.class_indices
 class_indices = dict((v,k) for k,v in class_indices.items())
 
-vgg_preds = vgg_model.predict(testgen)
+vgg_preds = vgg_model_ft.predict(testgen)
 vgg_pred_classes = np.argmax(vgg_preds, axis=1)
 
 vgg_acc = accuracy_score(true_classes, vgg_pred_classes)
