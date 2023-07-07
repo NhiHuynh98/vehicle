@@ -174,7 +174,7 @@ early_stop = EarlyStopping(monitor='val_loss',
                            mode='min')
 
 
-vgg_history = model.fit(traingen,
+vgg_history = vgg_model.fit(traingen,
 	batch_size=BATCH_SIZE,
 	epochs=n_epochs,
 	validation_data=validgen,
