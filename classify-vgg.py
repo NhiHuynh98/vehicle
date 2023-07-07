@@ -5,6 +5,7 @@ from keras.applications.vgg16 import preprocess_input
 from keras.applications.vgg16 import decode_predictions
 from keras.applications.vgg16 import VGG16
 import argparse
+import cv2
 
 # load the model
 model = VGG16()
@@ -14,7 +15,10 @@ ap.add_argument("-m", "--image", required=True,
                 help="input image need to classify")
 args = vars(ap.parse_args())
 # load an image from file
-image = load_img(args['image'], target_size=(224, 224))
+image = cv2.imread(args['image'])
+image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Convert BGR to RGB format
+
+image = cv2.resize(image, (224, 224))
 # convert the image pixels to a numpy array
 image = img_to_array(image)
 # reshape data for the model
