@@ -10,10 +10,31 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 from livelossplot.inputs.keras import PlotLossesCallback
 import os
 from keras.optimizers import Adam
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+from keras.layers import Dropout
 
 import numpy as np
 from glob import glob
 import matplotlib.pyplot as plt
+
+def plot_heatmap(y_true, y_pred, class_names, ax, title):
+    cm = confusion_matrix(y_true, y_pred)
+    sns.heatmap(
+        cm, 
+        annot=True, 
+        square=True, 
+        xticklabels=class_names, 
+        yticklabels=class_names,
+        fmt='d', 
+        cmap=plt.cm.Blues,
+        cbar=False,
+        ax=ax
+    )
+    ax.set_title(title, fontsize=16)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
+    ax.set_ylabel('True Label', fontsize=12)
+    ax.set_xlabel('Predicted Label', fontsize=12)
 
 def create_model(input_shape, n_classes, optimizer='rmsprop', fine_tune=0):
     """
@@ -66,23 +87,23 @@ IMAGE_SIZE = [224,224]
 train_path = 'Cars Dataset/train'
 test_path = 'Cars Dataset/test'
 
-# Load pre-trained model
-vgg = VGG16(input_shape=IMAGE_SIZE+[3], weights='imagenet',include_top=False)
+# # Load pre-trained model
+# vgg = VGG16(input_shape=IMAGE_SIZE+[3], weights='imagenet',include_top=False)
 
-for layer in vgg.layers:    #layer.trainable=False means we dont want to retrain those weights of layers.
-    layer.trainable=False
+# for layer in vgg.layers:    #layer.trainable=False means we dont want to retrain those weights of layers.
+#     layer.trainable=False
 
-#  Use glob to the total number of classes (audi, lamborghini and mercedes)
-folders=glob('Cars Dataset/train/*')
-print("number of classes", folders)
+# #  Use glob to the total number of classes (audi, lamborghini and mercedes)
+# folders=glob('Cars Dataset/train/*')
+# print("number of classes", folders)
 
-x=Flatten()(vgg.output)
+# x=Flatten()(vgg.output)
 
-prediction = Dense(len(folders),activation='softmax')(x)
+# prediction = Dense(len(folders),activation='softmax')(x)
 
-model = Model(inputs=vgg.input,outputs=prediction)    # create model object
+# model = Model(inputs=vgg.input,outputs=prediction)    # create model object
 
-model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
+# model.compile(loss='categorical_crossentropy',optimizer='adam',metrics=['accuracy'])
 
 BATCH_SIZE = 32
 epochs = 5
@@ -134,7 +155,7 @@ n_classes=10
 
 n_steps = traingen.samples // BATCH_SIZE
 n_val_steps = validgen.samples // BATCH_SIZE
-n_epochs = 50
+n_epochs = 2
 
 # First we'll train the model without Fine-tuning
 vgg_model = create_model(input_shape, n_classes, optim_1, fine_tune=0)
@@ -174,3 +195,18 @@ vgg_pred_classes = np.argmax(vgg_preds, axis=1)
 
 vgg_acc = accuracy_score(true_classes, vgg_pred_classes)
 print("VGG16 Model Accuracy without Fine-Tuning: {:.2f}%".format(vgg_acc * 100))
+
+#  confussion matrix
+class_names = testgen.class_indices.keys()
+
+
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20, 10))
+print("TEST AX", ax1)
+print("TEST AX", ax2)
+plot_heatmap(true_classes, vgg_pred_classes, class_names, ax2, title="Transfer Learning (VGG16) No Fine-Tuning")    
+
+fig.suptitle("Confusion Matrix Model Comparison", fontsize=24)
+fig.tight_layout()
+fig.subplots_adjust(top=1.25)
+plt.savefig('confusion-matrix.png')
+plt.show()
