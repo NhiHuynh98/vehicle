@@ -189,17 +189,17 @@ vgg_acc = accuracy_score(true_classes, vgg_pred_classes)
 print("VGG16 Model Accuracy without Fine-Tuning: {:.2f}%".format(vgg_acc * 100))
 
 
-# plt.plot(vgg_ft_history.history['loss'], label='train loss')
-# plt.plot(vgg_ft_history.history['val_loss'], label='val loss')
-# plt.legend()
-# plt.show()
-# plt.savefig('LossVal_loss')
-# # ploting the accuracy
-# plt.plot(vgg_ft_history.history['accuracy'], label='train acc')
-# plt.plot(vgg_ft_history.history['val_accuracy'], label='val acc')
-# plt.legend()
-# plt.show()
-# plt.savefig('AccVal_acc')
+plt.plot(vgg_ft_history.history['loss'], label='train loss')
+plt.plot(vgg_ft_history.history['val_loss'], label='val loss')
+plt.legend()
+plt.show()
+plt.savefig('LossVal_loss.png')
+# ploting the accuracy
+plt.plot(vgg_ft_history.history['accuracy'], label='train acc')
+plt.plot(vgg_ft_history.history['val_accuracy'], label='val acc')
+plt.legend()
+plt.show()
+plt.savefig('AccVal_acc.png')
 
 #  confussion matrix
 class_names = testgen.class_indices.keys()
