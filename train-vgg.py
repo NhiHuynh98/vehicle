@@ -172,6 +172,9 @@ vgg_ft_history = vgg_model_ft.fit(traingen,
 	callbacks=[tl_checkpoint_1, early_stop, plot_loss_1],
 	verbose=1)
 
+vgg_model_ft.save_weights('top_model_weights.h5')
+vgg_model_ft.save('model.h5')
+
 # Generate predictions
 vgg_model_ft.load_weights('tl_model_v1.weights.best.hdf5') # initialize the best trained weights
 

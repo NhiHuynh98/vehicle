@@ -22,7 +22,8 @@ image = cv2.resize(image, (224, 224))
 # convert the image pixels to a numpy array
 image = np.array(image)
 # reshape data for the model
-image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+image = np.expand_dims(image, axis=0)
+#image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
 # prepare the image for the VGG model
 image = preprocess_input(image)
 # predict the probability across all output classes
